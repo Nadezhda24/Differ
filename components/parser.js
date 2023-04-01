@@ -6,7 +6,7 @@ import {LinerTree} from "../model/LinerTree.js";
  * @param tree -  информация об HTML файле в виде дерева
  * @returns {*[]} - информация об HTML файле в виде списка
  */
-const parser = (tree) => {
+const parserToList = (tree) => {
     let linerTreeList = [];
     const rootTree = (node) => {
         node.childNodes.forEach(n => {
@@ -22,4 +22,12 @@ const parser = (tree) => {
     return linerTreeList;
 }
 
-export {parser}
+const parserToTree = (list) => {
+
+}
+
+
+
+
+
+export {parserToList}

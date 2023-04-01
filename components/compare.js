@@ -1,3 +1,5 @@
+import {addElement} from "./htmlUtils.js";
+
 /**
  * Сравнение информации о двух HTML файлах
  * @param tree1 - информация о первом HTML файле
@@ -8,7 +10,9 @@ const compere = (tree1, tree2) => {
     let change = 0;
     tree1.forEach((item, index) => {
         item.compare(tree2[index]);
-        if (item.status === "changed") change++;
+        if (item.status === "changed") {
+            change++;
+        }
     })
 
     console.log("change " + change);

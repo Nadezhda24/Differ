@@ -35,11 +35,14 @@ const convertToHtml = (document) => {
 
 /**
  * Добавление элемента для выделения изменений
+ * @param document - данные об HTML файле
  * @param node - узел, который необходимо обернуть в элемент
  * @param element - элемент (<div>), в который оборачивается узел
  */
-const addElement = (node, element) => {
-
+const addElement = (document, node, element) => {
+    const newElement = document(element);
+    newElement.append(node.children());
+    node.empty().append(newElement);
 }
 
-export {readToHtmlFile, convertToRoot, convertToHtml, writeToHtmlFile}
+export {readToHtmlFile, convertToRoot, convertToHtml, writeToHtmlFile, addElement}

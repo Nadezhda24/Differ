@@ -1,4 +1,4 @@
-import {parser} from "./components/parser.js";
+import {parserToList} from "./components/parser.js";
 import {readToHtmlFile} from "./components/htmlUtils.js";
 import {compere} from "./components/compare.js";
 
@@ -10,8 +10,8 @@ const pathOutput = "testOutput/output.html";
 const tree1 = readToHtmlFile(path1);
 const tree2 = readToHtmlFile(path2);
 //если нужны списки
-const listTree1 = parser(tree1);
-const listTree2 = parser(tree2);
+const listTree1 = parserToList(tree1);
+const listTree2 = parserToList(tree2);
 
 
 
