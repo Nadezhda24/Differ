@@ -1,6 +1,11 @@
-import {convertToRoot} from "./convertHtml.js";
+import {convertToRoot} from "./htmlUtils.js";
 import {LinerTree} from "../model/LinerTree.js";
 
+/**
+ * Преобразование дерева в список
+ * @param tree -  информация об HTML файле в виде дерева
+ * @returns {*[]} - информация об HTML файле в виде списка
+ */
 const parser = (tree) => {
     let linerTreeList = [];
     const rootTree = (node) => {

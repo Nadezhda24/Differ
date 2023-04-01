@@ -1,4 +1,9 @@
-
+/**
+ * Сравнение информации о двух HTML файлах
+ * @param tree1 - информация о первом HTML файле
+ * @param tree2 - информация о втором HTML файле
+ * @returns {*} - результат сравления
+ */
 const compere = (tree1, tree2) => {
     let change = 0;
     tree1.forEach((item, index) => {
