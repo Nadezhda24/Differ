@@ -1,3 +1,5 @@
 import {parser} from "./components/parser.js";
 
-parser();
+const path1 = "testPages/1-dst.html";
+const path2 = "testPages/1-src.html";
+parser(path1);

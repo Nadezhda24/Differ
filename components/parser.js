@@ -1,7 +1,17 @@
-import {readHtml} from "./readHtml.js";
+import {convertToRoot, readHtml} from "./readHtml.js";
 
-const parser = () => {
-    readHtml();
+const rootTree = (node) => {
+    node.children.forEach(n => {
+        console.log(n)
+        if (!!n.children && n.children.length > 1) {
+            rootTree(n);
+        }
+    })
+}
+
+const parser = (path) => {
+    const document = readHtml(path);
+    rootTree(convertToRoot(document)[0]);
 }
 
 export {parser}
