@@ -1,1 +1,3 @@
-console.log("Hello word");
+import {parser} from "./components/parser.js";
+
+parser();

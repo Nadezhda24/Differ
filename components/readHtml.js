@@ -1,0 +1,4 @@
+const readHtml = () => {
+}
+
+export {readHtml}
