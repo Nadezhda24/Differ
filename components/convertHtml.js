@@ -6,10 +6,17 @@ const convertHtml = (path) => {
     return load(content);
 }
 
+const writeToHtmlFile = (pathOutput, document) => {
+    fs.writeFileSync(pathOutput, document.root().html(), 'utf8');
+}
+
 const convertToRoot = (document) => {
     return document.root();
 }
 
+const convertToHtml = (document) => {
+    return document.root().html();
+}
 
 
-export {convertHtml, convertToRoot}
+export {convertHtml, convertToRoot, convertToHtml, writeToHtmlFile}
