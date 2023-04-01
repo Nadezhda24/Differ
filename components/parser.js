@@ -1,7 +1,7 @@
-import {convertToRoot, convertHtml, convertToHtml} from "./convertHtml.js";
+import {convertToRoot} from "./convertHtml.js";
 import {LinerTree} from "../model/LinerTree.js";
 
-const parser = (path) => {
+const parser = (tree) => {
     let linerTreeList = [];
     const rootTree = (node) => {
         node.childNodes.forEach(n => {
@@ -12,9 +12,7 @@ const parser = (path) => {
         })
     }
 
-    const document = convertHtml(path);
-
-    rootTree(convertToRoot(document)[0]);
+    rootTree(convertToRoot(tree)[0]);
 
     return linerTreeList;
 }

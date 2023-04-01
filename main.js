@@ -1,5 +1,5 @@
 import {parser} from "./components/parser.js";
-import {writeToHtmlFile} from "./components/convertHtml.js";
+import {convertHtml} from "./components/convertHtml.js";
 import {compere} from "./components/compare.js";
 
 const path1 = "testPages/1-dst.html";
@@ -7,18 +7,14 @@ const path2 = "testPages/1-src.html";
 const pathOutput = "testOutput/output.html";
 
 
-const tree1 = parser(path1);
-const tree2 = parser(path2);
-const resultDocument = compere(tree1, tree2);
+const tree1 = convertHtml(path1);
+const tree2 = convertHtml(path2);
+//если нужны списки
+const listTree1 = parser(tree1);
+const listTree2 = parser(tree2);
 
-let change = 0;
-tree2.forEach((item, index) => {
-   item.compare(tree1[index]);
-   if (item.status === "changed") change++;
-})
+const resultDocument = compere(listTree1, listTree2);
+
+
 
 //writeToHtmlFile(pathOutput, resultDocument);
-console.log("change " + change);
-console.log(tree1.length);
-console.log(tree2[343]);
-console.log(tree1.length);
