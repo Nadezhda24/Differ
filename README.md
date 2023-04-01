@@ -2,21 +2,24 @@
 <h2 align="center">Сравнение HTML</h2>
 </p>
 
-СРЕДА ЗАПУСКА
+Настройки окружения:
 ------------
-1) требуется установленный пакет npm  для создания и запуска приложения;
+1. Необходимо установить [Node.js](https://nodejs.dev/en/) последней версии
 
 
-УСТАНОВКА
+Установка:
 ------------
+~~~
+1. git clone https://github.com/Nadezhda24/Differ.git path/to/project
+2. cd path/to/project
+3. npm install
+~~~
 
-Выполните 
-~~~
-git clone https://github.com/Nadezhda24/Differ.git
-npm install
-~~~
+[npm](https://www.npmjs.com/) - консольный менеджер пакетов, поставляемый вместе с Node.js
 
-Запуск 
+
+Запуск:
+------------
 ~~~
-node node .\main.js
+node .\main.js
 ~~~
