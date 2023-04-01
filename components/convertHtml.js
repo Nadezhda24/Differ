@@ -1,15 +1,15 @@
 import * as fs from "fs";
 import {load} from "cheerio";
 
-
-const readHtml = (path , selector = null) => {
+const convertHtml = (path) => {
     const content = fs.readFileSync(path, 'utf8');
-    return load(content)
-    }
+    return load(content);
+}
 
 const convertToRoot = (document) => {
-    return document.root()
+    return document.root();
 }
 
 
-export {readHtml,  convertToRoot}
+
+export {convertHtml, convertToRoot}

@@ -1,17 +1,22 @@
-import {convertToRoot, readHtml} from "./readHtml.js";
-
-const rootTree = (node) => {
-    node.children.forEach(n => {
-        console.log(n)
-        if (!!n.children && n.children.length > 1) {
-            rootTree(n);
-        }
-    })
-}
+import {convertToRoot, convertHtml} from "./convertHtml.js";
+import {LinerTree} from "../model/LinerTree.js";
 
 const parser = (path) => {
-    const document = readHtml(path);
+
+    const linerTreeList = [];
+
+    const rootTree = (node) => {
+        node.childNodes.forEach(n => {
+            linerTreeList.push(new LinerTree(n))
+            if (!!n.childNodes && n.childNodes.length > 0) {
+                rootTree(n);
+            }
+        })
+    }
+
+    const document = convertHtml(path);
     rootTree(convertToRoot(document)[0]);
+    return linerTreeList;
 }
 
 export {parser}
