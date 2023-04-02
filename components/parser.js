@@ -22,10 +22,6 @@ const parserToList = (tree) => {
     return linerTreeList;
 }
 
-const parserToTree = (list) => {
-
-}
-
 
 
 
