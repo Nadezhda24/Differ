@@ -114,15 +114,23 @@ var src = htmlTreeToPlainList(loadHtml("testPages/1-src.html"));
 var dst = htmlTreeToPlainList(loadHtml("testPages/1-dst.html"));
 var diffs = findDifferenceBtwLists(src, dst);
 var result = buildResultListFromDifferences(src, dst, diffs);
-// у меня есть список нод, нода хранит в себе ноду черрио, 
-// уровень вложенности интом и хэш, резалт переменная хранит этот список))
-result.forEach(function (r) {
-    if (r._level === 1) {
-        console.log(r._node.type);
-        if (r._node.type === "tag") {
-            var tag = r._node;
-            console.log(tag.name);
-        }
+// TODO: build DOM tree from LNode's list
+// TODO: write DOM tree to disk
+diffs.forEach(function (d) {
+    var _a, _b, _c, _d, _e, _f;
+    if (d._type === Difference_1.DifferenceType.Added) {
+        console.log(" ".repeat((_a = d._dst) === null || _a === void 0 ? void 0 : _a._level) + "Added   " + ((_b = d._dst) === null || _b === void 0 ? void 0 : _b.text));
     }
-    console.log(r.wrappedNode);
+    if (d._type === Difference_1.DifferenceType.Deleted) {
+        console.log(" ".repeat((_c = d._dst) === null || _c === void 0 ? void 0 : _c._level) + "Deleted " + ((_d = d._src) === null || _d === void 0 ? void 0 : _d.text));
+    }
+    if (d._type === Difference_1.DifferenceType.Equals) {
+        console.log(" ".repeat((_e = d._dst) === null || _e === void 0 ? void 0 : _e._level) + "Equals  " + ((_f = d._src) === null || _f === void 0 ? void 0 : _f.text));
+    }
+    if (d._type === Difference_1.DifferenceType.Error) {
+        console.log("error");
+    }
 });
+// result.forEach((r) => {
+//     console.log(" ".repeat(r._level) + r.text);
+// });

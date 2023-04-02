@@ -61,11 +61,31 @@ var LNode = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(LNode.prototype, "text", {
+        get: function () {
+            var str = "";
+            if (this._node.type === "tag") {
+                var tag = this._node;
+                str += tag.name;
+            }
+            if (this._node.type === "comment") {
+                var comment = this._node;
+                str += "comment" + comment.data;
+            }
+            if (this._node.type === "text") {
+                var text = this._node;
+                str += "text" + text.data;
+            }
+            return str;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(LNode.prototype, "wrappedNode", {
         get: function () {
             if (this._node.type === "tag") {
                 this._node.childNodes = [];
-                console.log(this._node.data);
+                //let newNode : cheerio.Element = new TagElement()
             }
             return this._node;
         },
