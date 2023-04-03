@@ -11,8 +11,8 @@ class ResultHTML {
                         <meta http-equiv="X-UA-Compatible" content="ie=edge">
                         <title>HTML Difference</title>
                         <style>
-                            .delete { background-color:#FF0000; } 
-                            .add { background-color:#00FF00; }
+                            .delete { background-color:#EA8888FF; } 
+                            .add { background-color:#9FE89FFF; }
                             .equal { background-color:#FFFFFF; }
                         </style>
                     </head>
