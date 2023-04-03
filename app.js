@@ -27,7 +27,9 @@ function htmlTreeToPlainList(documentRoot) {
             var tag = node;
             (_a = tag.childNodes) === null || _a === void 0 ? void 0 : _a.forEach(function (element) {
                 list.push(new LNode_1.LNode(level, element));
-                htmlTreeToPlainListRec(level + 1, element);
+                if (element.type === "tag") {
+                    htmlTreeToPlainListRec(level + 1, element);
+                }
             });
         }
         else {
@@ -141,17 +143,7 @@ var htmlBuilder = new ResultHTML_1.ResultHTML();
 writeHtml("outPages/result.html", htmlBuilder.buildHtml(diffs));
 // TODO: build DOM tree from LNode's list
 // TODO: write DOM tree to disk
-// diffs.forEach((d : Difference) => {
-//     if (d._type === DifferenceType.Added) {
-//         console.log(" ".repeat(d._dst?._level as number) + "Added   hash: " + d._dst?._hash + " text: " + d._dst?.text);
-//     }
-//     if (d._type === DifferenceType.Deleted) {
-//         console.log(" ".repeat(d._src?._level as number) + "Deleted hash: " + d._src?._hash + " text: " + d._src?.text);
-//     }
-//     if (d._type === DifferenceType.Equals) {
-//         console.log(" ".repeat(d._src?._level as number) + "Equals  hash: " + d._src?._hash + " text: " + d._src?.text);
-//     }
-//     if (d._type === DifferenceType.Error) {
-//         console.log("error");
-//     }
-// });
+diffs.forEach(function (d) {
+    var _a, _b, _c;
+    console.log(" ".repeat((_a = d.node) === null || _a === void 0 ? void 0 : _a.level) + "Added   hash: " + ((_b = d.node) === null || _b === void 0 ? void 0 : _b.hash) + " text: " + ((_c = d.node) === null || _c === void 0 ? void 0 : _c.content));
+});

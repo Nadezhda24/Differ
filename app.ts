@@ -32,9 +32,13 @@ function htmlTreeToPlainList(documentRoot: cheerio.Root) : LNode[] {
     const htmlTreeToPlainListRec = (level: number, node : cheerio.Element) => {
         if (node.type === "tag") {
             let tag : cheerio.TagElement = node;
+
             tag.childNodes?.forEach((element : cheerio.Element) => {
                 list.push(new LNode(level, element));
-                htmlTreeToPlainListRec(level + 1, element);
+                
+                if (element.type === "tag") {
+                    htmlTreeToPlainListRec(level + 1, element);
+                }
             });
         } 
         else {
@@ -184,17 +188,6 @@ writeHtml("outPages/result.html", htmlBuilder.buildHtml(diffs));
 // TODO: build DOM tree from LNode's list
 // TODO: write DOM tree to disk
 
-// diffs.forEach((d : Difference) => {
-//     if (d._type === DifferenceType.Added) {
-//         console.log(" ".repeat(d._dst?._level as number) + "Added   hash: " + d._dst?._hash + " text: " + d._dst?.text);
-//     }
-//     if (d._type === DifferenceType.Deleted) {
-//         console.log(" ".repeat(d._src?._level as number) + "Deleted hash: " + d._src?._hash + " text: " + d._src?.text);
-//     }
-//     if (d._type === DifferenceType.Equals) {
-//         console.log(" ".repeat(d._src?._level as number) + "Equals  hash: " + d._src?._hash + " text: " + d._src?.text);
-//     }
-//     if (d._type === DifferenceType.Error) {
-//         console.log("error");
-//     }
-// });
+diffs.forEach((d : Difference) => {
+    console.log(" ".repeat(d.node?.level as number) + "Added   hash: " + d.node?.hash + " text: " + d.node?.content);
+});
