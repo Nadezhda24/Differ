@@ -114,15 +114,17 @@ var src = htmlTreeToPlainList(loadHtml("testPages/1-src.html"));
 var dst = htmlTreeToPlainList(loadHtml("testPages/1-dst.html"));
 var diffs = findDifferenceBtwLists(src, dst);
 var result = buildResultListFromDifferences(src, dst, diffs);
-// у меня есть список нод, нода хранит в себе ноду черрио, 
-// уровень вложенности интом и хэш, резалт переменная хранит этот список))
+// TODO: build DOM tree from LNode's list
+// TODO: write DOM tree to disk
 result.forEach(function (r) {
-    if (r._level === 1) {
-        console.log(r._node.type);
-        if (r._node.type === "tag") {
-            var tag = r._node;
-            console.log(tag.name);
-        }
+    if (r._node.type === "tag") {
+        var tag = r._node;
+        //console.log(' ' * r._level + tag.name)
     }
-    console.log(r.wrappedNode);
+    if (r._node.type === "comment") {
+        var comment = r._node;
+    }
+    if (r._node.type === "text") {
+        var text = r._node;
+    }
 });

@@ -65,7 +65,7 @@ var LNode = /** @class */ (function () {
         get: function () {
             if (this._node.type === "tag") {
                 this._node.childNodes = [];
-                console.log(this._node.data);
+                //let newNode : cheerio.Element = new TagElement()
             }
             return this._node;
         },
