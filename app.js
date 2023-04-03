@@ -10,25 +10,31 @@ var ArgsKeys;
 })(ArgsKeys || (ArgsKeys = {}));
 function main(path1, path2, resultFileName, args) {
     var loader = new HMTLLoader_1.HTMLLoader();
+    console.log("loading html1 ...");
     loader.loadHtml(path1);
     var list1 = loader.getPlainTree();
     list1.forEach(function (item) { item.computeHash(args[ArgsKeys.IgnoreClassAtrribute]); });
+    console.log("loading html2 ...");
     loader.loadHtml(path2);
     var list2 = loader.getPlainTree();
     list2.forEach(function (item) { item.computeHash(args[ArgsKeys.IgnoreClassAtrribute]); });
+    console.log("we are looking for differences ...");
     var differ = new HTMLDiffer_1.HTMLDiffer();
     var differences = differ.buildDifferencesList(list1, list2);
+    console.log("saving ...");
     var htmlBuilder = new ResultHTML_1.ResultHTML();
     var html = htmlBuilder.buildHtml(differences);
-    fs.writeFileSync("./".concat(resultFileName, ".html"), html);
+    var savePath = "./".concat(resultFileName, ".html");
+    fs.writeFileSync(savePath, html);
+    console.log("saved at: ".concat(savePath));
 }
 function processInput() {
     var ignoreCaseArg = "--ignoreClassAttribute";
-    var usage = "usage: path/to/src/html path/to/dst/html resultFileName [".concat(ignoreCaseArg, "]");
+    var usage = "usage: <path/to/src/html> <path/to/dst/html> <resultFileName> [".concat(ignoreCaseArg, "]");
     var args = [];
     if (process.argv.length < 5) {
         console.log(usage);
-        args.push("-1");
+        args = ["-1"];
     }
     else {
         var path1 = process.argv[2];
@@ -40,14 +46,14 @@ function processInput() {
         }
         if (!fs.existsSync(path1)) {
             console.log("filepath ".concat(path1, " does not exists"));
-            args.push("-1");
+            args = ["-1"];
         }
         else {
             args.push(path1);
         }
         if (!fs.existsSync(path2)) {
             console.log("filepath ".concat(path2, " does not exists"));
-            args.push("-1");
+            args = ["-1"];
         }
         else {
             args.push(path2);
