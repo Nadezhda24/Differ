@@ -149,19 +149,21 @@ let result = buildResultListFromDifferences(src, dst, diffs);
 // TODO: build DOM tree from LNode's list
 // TODO: write DOM tree to disk
 
-result.forEach((r) => {
-    if (r._node.type === "tag") {
-        let tag: cheerio.TagElement = r._node as cheerio.TagElement;
-
-        //console.log(' ' * r._level + tag.name)
+diffs.forEach((d : Difference) => {
+    if (d._type === DifferenceType.Added) {
+        console.log(" ".repeat(d._dst?._level as number) + "Added   hash: " + d._dst?._hash + " text: " + d._dst?.text);
     }
-    if (r._node.type === "comment") {
-        let comment: cheerio.CommentElement = r._node as cheerio.CommentElement;
-
+    if (d._type === DifferenceType.Deleted) {
+        console.log(" ".repeat(d._src?._level as number) + "Deleted hash: " + d._src?._hash + " text: " + d._src?.text);
     }
-
-    if (r._node.type === "text") {
-        let text: cheerio.TextElement = r._node as cheerio.TextElement;
-
+    if (d._type === DifferenceType.Equals) {
+        console.log(" ".repeat(d._src?._level as number) + "Equals  hash: " + d._src?._hash + " text: " + d._src?.text);
+    }
+    if (d._type === DifferenceType.Error) {
+        console.log("error");
     }
 });
+
+// result.forEach((r) => {
+//     console.log(" ".repeat(r._level) + r.text);
+// });

@@ -80,6 +80,28 @@ class LNode {
         return this._hash;
     }
 
+    get text() {
+        let str : string = "";
+        if (this._node.type === "tag") {
+            let tag: cheerio.TagElement = this._node as cheerio.TagElement;
+            
+            str += tag.name;
+        }
+    
+        if (this._node.type === "comment") {
+            let comment: cheerio.CommentElement = this._node as cheerio.CommentElement;
+
+            str += "comment" + comment.data;
+        }
+
+        if (this._node.type === "text") {
+            let text: cheerio.TextElement = this._node as cheerio.TextElement;
+
+            str += "text" + text.data;
+        }
+        return str;
+    }
+
     get wrappedNode() : cheerio.Element {
         if (this._node.type === "tag") {
             this._node.childNodes = [];
