@@ -139,3 +139,8 @@ node app.js <path/to/src/html> <path/to/dst/html> <resultFileName> [--ignoreClas
 2. Путь к файлу HTML ПОСЛЕ изменений
 3. Название выходного файла
 4. Опциональный параметр, включающий/отключайющий учёт атрибута "class"
+
+Пример запуска:
+~~~
+node  app.js ./testPages/1-src.html ./testPages/1-dst.html result --ignoreClassAttribute
+~~~
