@@ -43,6 +43,18 @@ class Difference
             return null;
         }
     }
+
+    get content() : string {
+        if (this._type === DifferenceType.Added) {
+            return "Added  hash: " + this.node?.hash + " content: " + this.node?.content;
+        } else if (this._type === DifferenceType.Deleted) {
+            return "Deleted  hash: " + this.node?.hash + " content: " + this.node?.content;
+        } else if (this._type === DifferenceType.Equals) {
+            return "Equals  hash: " + this.node?.hash + " content: " + this.node?.content;
+        } else {
+            return "Null";
+        }
+    }
 }
 
 export {Difference, DifferenceType};

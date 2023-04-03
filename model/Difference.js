@@ -51,6 +51,25 @@ var Difference = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Difference.prototype, "content", {
+        get: function () {
+            var _a, _b, _c, _d, _e, _f;
+            if (this._type === DifferenceType.Added) {
+                return "Added  hash: " + ((_a = this.node) === null || _a === void 0 ? void 0 : _a.hash) + " content: " + ((_b = this.node) === null || _b === void 0 ? void 0 : _b.content);
+            }
+            else if (this._type === DifferenceType.Deleted) {
+                return "Deleted  hash: " + ((_c = this.node) === null || _c === void 0 ? void 0 : _c.hash) + " content: " + ((_d = this.node) === null || _d === void 0 ? void 0 : _d.content);
+            }
+            else if (this._type === DifferenceType.Equals) {
+                return "Equals  hash: " + ((_e = this.node) === null || _e === void 0 ? void 0 : _e.hash) + " content: " + ((_f = this.node) === null || _f === void 0 ? void 0 : _f.content);
+            }
+            else {
+                return "Null";
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Difference;
 }());
 exports.Difference = Difference;
