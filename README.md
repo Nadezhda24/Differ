@@ -119,6 +119,7 @@ for (int i = 0; i < s1.Length; ++i)
 1. git clone https://github.com/Nadezhda24/Differ.git path/to/project
 2. cd path/to/project
 3. npm install
+4. npm install -g typescript
 ~~~
 
 [npm](https://www.npmjs.com/) - консольный менеджер пакетов, поставляемый вместе с Node.js
