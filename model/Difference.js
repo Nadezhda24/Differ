@@ -26,6 +26,31 @@ var Difference = /** @class */ (function () {
             this._type = DifferenceType.Deleted;
         }
     }
+    Object.defineProperty(Difference.prototype, "type", {
+        get: function () {
+            return this._type;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Difference.prototype, "node", {
+        get: function () {
+            if (this._type === DifferenceType.Added) {
+                return this._dst;
+            }
+            else if (this._type === DifferenceType.Deleted) {
+                return this._src;
+            }
+            else if (this._type === DifferenceType.Equals) {
+                return this._src;
+            }
+            else {
+                return null;
+            }
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Difference;
 }());
 exports.Difference = Difference;

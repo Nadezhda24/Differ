@@ -3,11 +3,16 @@ import { LNode } from './model/LNode';
 import * as ch from 'cheerio';
 import * as fs from "fs";
 import { Difference, DifferenceType } from './model/Difference';
+import { ResultHTML } from './component/ResultHTML';
 
 
 function loadHtml(path: string) : cheerio.Root {
     let html: string = fs.readFileSync(path, 'utf-8');
     return ch.load(html);
+}
+
+function writeHtml(path: string, html: string) {
+    fs.writeFileSync(path, html);
 }
 
 function writeLnodesToFile(path: string, list: LNode[]) {
@@ -140,24 +145,41 @@ function buildResultListFromDifferences(diffs: Difference[]) : LNode[] {
     return result;
 }
 
-function buildTreeFromList(list : LNode[]) {
+function buildTreeFromList(list : LNode[]) : cheerio.Root {
 
-    let doc : cheerio.Root = loadHtml("testPages/1-src.html");
+    let doc : cheerio.Root = ch.load("<div ></div>");
 
-    doc.root().children();
+    let roots : cheerio.Element[] = [];
+
+    for (let i : number = 0; i < list.length; ++i) {
+        if (list[i].level == 1) {
+            roots.push(list[i].node);
+        }
+    }
+
+    roots.forEach((r) => { (r as cheerio.TagElement).childNodes = []});
+
+    list.forEach((r) => {
+        console.log(r.html)
+    })
+
+    doc.root().children().children().replaceWith(roots);
+
+    //console.log("c" + doc.html());
+    return doc;
 }
 
-let src : LNode[] = htmlTreeToPlainList(loadHtml("testPages/simple_src.html"));
-let dst : LNode[] = htmlTreeToPlainList(loadHtml("testPages/simple_dst.html"));
+let src : LNode[] = htmlTreeToPlainList(loadHtml("testPages/1-src.html"));
+let dst : LNode[] = htmlTreeToPlainList(loadHtml("testPages/1-dst.html"));
 
 writeLnodesToFile("outPages/src.out", src);
 writeLnodesToFile("outPages/dst.out", dst);
 
 let diffs : Difference[] = findDifferenceBtwLists(src, dst);
 
-let result = buildResultListFromDifferences(diffs);
+let htmlBuilder : ResultHTML = new ResultHTML();
 
-writeLnodesToFile("outPages/result.out", result);
+writeHtml("outPages/result.html", htmlBuilder.buildHtml(diffs));
 
 // TODO: build DOM tree from LNode's list
 // TODO: write DOM tree to disk

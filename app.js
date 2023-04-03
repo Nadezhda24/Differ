@@ -4,9 +4,13 @@ var LNode_1 = require("./model/LNode");
 var ch = require("cheerio");
 var fs = require("fs");
 var Difference_1 = require("./model/Difference");
+var ResultHTML_1 = require("./component/ResultHTML");
 function loadHtml(path) {
     var html = fs.readFileSync(path, 'utf-8');
     return ch.load(html);
+}
+function writeHtml(path, html) {
+    fs.writeFileSync(path, html);
 }
 function writeLnodesToFile(path, list) {
     fs.writeFileSync(path, "\n");
@@ -113,16 +117,28 @@ function buildResultListFromDifferences(diffs) {
     return result;
 }
 function buildTreeFromList(list) {
-    var doc = loadHtml("testPages/1-src.html");
-    doc.root().children();
+    var doc = ch.load("<div ></div>");
+    var roots = [];
+    for (var i = 0; i < list.length; ++i) {
+        if (list[i].level == 1) {
+            roots.push(list[i].node);
+        }
+    }
+    roots.forEach(function (r) { r.childNodes = []; });
+    list.forEach(function (r) {
+        console.log(r.html);
+    });
+    doc.root().children().children().replaceWith(roots);
+    //console.log("c" + doc.html());
+    return doc;
 }
-var src = htmlTreeToPlainList(loadHtml("testPages/simple_src.html"));
-var dst = htmlTreeToPlainList(loadHtml("testPages/simple_dst.html"));
+var src = htmlTreeToPlainList(loadHtml("testPages/1-src.html"));
+var dst = htmlTreeToPlainList(loadHtml("testPages/1-dst.html"));
 writeLnodesToFile("outPages/src.out", src);
 writeLnodesToFile("outPages/dst.out", dst);
 var diffs = findDifferenceBtwLists(src, dst);
-var result = buildResultListFromDifferences(diffs);
-writeLnodesToFile("outPages/result.out", result);
+var htmlBuilder = new ResultHTML_1.ResultHTML();
+writeHtml("outPages/result.html", htmlBuilder.buildHtml(diffs));
 // TODO: build DOM tree from LNode's list
 // TODO: write DOM tree to disk
 // diffs.forEach((d : Difference) => {

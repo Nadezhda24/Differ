@@ -27,6 +27,22 @@ class Difference
             this._type = DifferenceType.Deleted;
         }
     }
+
+    get type() : DifferenceType {
+        return this._type;
+    }
+
+    get node() : LNode | null {
+        if (this._type === DifferenceType.Added) {
+            return this._dst;
+        } else if (this._type === DifferenceType.Deleted) {
+            return this._src;
+        } else if (this._type === DifferenceType.Equals) {
+            return this._src;
+        } else {
+            return null;
+        }
+    }
 }
 
 export {Difference, DifferenceType};

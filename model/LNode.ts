@@ -1,36 +1,6 @@
 import * as ch from "cheerio";
 var md5 = require('md5');
 
-function escapeHtml(str) {
-	let lookup = {
-		'&': '&amp;',
-		'"': '&quot;',
-		'\'': '&apos;',
-		'<': '&lt;',
-		'>': '&gt;'
-	};
-	return str.replace(/[&"'<>]/g, c => lookup[c]);
-}
-
-function wrapHtml(str) {
-	return `<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="UTF-8">
-			<meta name="viewport" content="width=device-width, initial-scale=1.0">
-			<meta http-equiv="X-UA-Compatible" content="ie=edge">
-			<title>HTML Difference</title>
-			<style>
-				.delete { background-color:#FF0000; } 
-				.add { background-color:#00FF00; }
-			</style>
-		</head>
-		<body>
-			<pre>${str}</pre>
-		</body>
-	</html>`
-}
-
 class LNode {
     _node : cheerio.Element
     _hash : string
@@ -49,6 +19,7 @@ class LNode {
             keys.forEach((k) => {
                 str += k + "=" + tag.attribs[k] + "||||";
             });
+            str += tag.data;
         }
     
         if (this._node.type === "comment") {
@@ -107,19 +78,35 @@ class LNode {
         return str.replace(/\\n/g, '');
     }
 
-    get wrappedNode() : cheerio.Element {
-        if (this._node.type === "tag") {
-            this._node.childNodes = [];
-            //let newNode : cheerio.Element = new TagElement()
-        }
+    get html() : string {
+        let doc = ch.load("");
 
-        return this._node;
+        this.clearChilds();
+
+        doc.root().children().replaceWith(this._node);
+        return doc.html();
+    }
+
+    get escapedHtml() : string {
+        let lookup = {
+            '&': '&amp;',
+            '"': '&quot;',
+            '\'': '&apos;',
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+        return this.html.replace(/[&"'<>]/g, c => lookup[c]);
     }
 
     isEqualTo(otherNode : LNode) : boolean {
         return otherNode._hash == this._hash;
     }
 
+    clearChilds() {
+        if (this._node.type === "tag") {
+            (this._node as cheerio.TagElement).childNodes = [];
+        }
+    }
 }
 
 export {LNode}

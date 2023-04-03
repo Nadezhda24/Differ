@@ -1,20 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LNode = void 0;
+var ch = require("cheerio");
 var md5 = require('md5');
-function escapeHtml(str) {
-    var lookup = {
-        '&': '&amp;',
-        '"': '&quot;',
-        '\'': '&apos;',
-        '<': '&lt;',
-        '>': '&gt;'
-    };
-    return str.replace(/[&"'<>]/g, function (c) { return lookup[c]; });
-}
-function wrapHtml(str) {
-    return "<!DOCTYPE html>\n\t<html lang=\"en\">\n\t\t<head>\n\t\t\t<meta charset=\"UTF-8\">\n\t\t\t<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n\t\t\t<meta http-equiv=\"X-UA-Compatible\" content=\"ie=edge\">\n\t\t\t<title>HTML Difference</title>\n\t\t\t<style>\n\t\t\t\t.delete { background-color:#FF0000; } \n\t\t\t\t.add { background-color:#00FF00; }\n\t\t\t</style>\n\t\t</head>\n\t\t<body>\n\t\t\t<pre>".concat(str, "</pre>\n\t\t</body>\n\t</html>");
-}
 var LNode = /** @class */ (function () {
     function LNode(level, node) {
         this._node = node;
@@ -27,6 +15,7 @@ var LNode = /** @class */ (function () {
             keys.forEach(function (k) {
                 str += k + "=" + tag_1.attribs[k] + "||||";
             });
+            str += tag_1.data;
         }
         if (this._node.type === "comment") {
             var comment = node;
@@ -88,19 +77,37 @@ var LNode = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(LNode.prototype, "wrappedNode", {
+    Object.defineProperty(LNode.prototype, "html", {
         get: function () {
-            if (this._node.type === "tag") {
-                this._node.childNodes = [];
-                //let newNode : cheerio.Element = new TagElement()
-            }
-            return this._node;
+            var doc = ch.load("");
+            this.clearChilds();
+            doc.root().children().replaceWith(this._node);
+            return doc.html();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(LNode.prototype, "escapedHtml", {
+        get: function () {
+            var lookup = {
+                '&': '&amp;',
+                '"': '&quot;',
+                '\'': '&apos;',
+                '<': '&lt;',
+                '>': '&gt;'
+            };
+            return this.html.replace(/[&"'<>]/g, function (c) { return lookup[c]; });
         },
         enumerable: false,
         configurable: true
     });
     LNode.prototype.isEqualTo = function (otherNode) {
         return otherNode._hash == this._hash;
+    };
+    LNode.prototype.clearChilds = function () {
+        if (this._node.type === "tag") {
+            this._node.childNodes = [];
+        }
     };
     return LNode;
 }());
