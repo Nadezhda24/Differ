@@ -10,6 +10,14 @@ function loadHtml(path: string) : cheerio.Root {
     return ch.load(html);
 }
 
+function writeLnodesToFile(path: string, list: LNode[]) {
+    fs.writeFileSync(path, "\n");
+    
+    list.forEach((r) => {
+        fs.appendFileSync(path, " ".repeat(r.level) + r.content)
+    })
+}
+
 function htmlTreeToPlainList(documentRoot: cheerio.Root) : LNode[] {
 
     let root : cheerio.Cheerio = documentRoot.root();
@@ -110,7 +118,7 @@ function findDifferenceBtwLists(src: LNode[], dst: LNode[]) {
     return diffs;
 }
 
-function buildResultListFromDifferences(src: LNode[], dst: LNode[], diffs: Difference[]) : LNode[] {
+function buildResultListFromDifferences(diffs: Difference[]) : LNode[] {
     let result : LNode[] = [];
     
     diffs.forEach(d => {
@@ -139,31 +147,32 @@ function buildTreeFromList(list : LNode[]) {
     doc.root().children();
 }
 
-let src : LNode[] = htmlTreeToPlainList(loadHtml("testPages/1-src.html"));
-let dst : LNode[] = htmlTreeToPlainList(loadHtml("testPages/1-dst.html"));
+let src : LNode[] = htmlTreeToPlainList(loadHtml("testPages/simple_src.html"));
+let dst : LNode[] = htmlTreeToPlainList(loadHtml("testPages/simple_dst.html"));
+
+writeLnodesToFile("outPages/src.out", src);
+writeLnodesToFile("outPages/dst.out", dst);
 
 let diffs : Difference[] = findDifferenceBtwLists(src, dst);
 
-let result = buildResultListFromDifferences(src, dst, diffs);
+let result = buildResultListFromDifferences(diffs);
+
+writeLnodesToFile("outPages/result.out", result);
 
 // TODO: build DOM tree from LNode's list
 // TODO: write DOM tree to disk
 
-diffs.forEach((d : Difference) => {
-    if (d._type === DifferenceType.Added) {
-        console.log(" ".repeat(d._dst?._level as number) + "Added   hash: " + d._dst?._hash + " text: " + d._dst?.text);
-    }
-    if (d._type === DifferenceType.Deleted) {
-        console.log(" ".repeat(d._src?._level as number) + "Deleted hash: " + d._src?._hash + " text: " + d._src?.text);
-    }
-    if (d._type === DifferenceType.Equals) {
-        console.log(" ".repeat(d._src?._level as number) + "Equals  hash: " + d._src?._hash + " text: " + d._src?.text);
-    }
-    if (d._type === DifferenceType.Error) {
-        console.log("error");
-    }
-});
-
-// result.forEach((r) => {
-//     console.log(" ".repeat(r._level) + r.text);
+// diffs.forEach((d : Difference) => {
+//     if (d._type === DifferenceType.Added) {
+//         console.log(" ".repeat(d._dst?._level as number) + "Added   hash: " + d._dst?._hash + " text: " + d._dst?.text);
+//     }
+//     if (d._type === DifferenceType.Deleted) {
+//         console.log(" ".repeat(d._src?._level as number) + "Deleted hash: " + d._src?._hash + " text: " + d._src?.text);
+//     }
+//     if (d._type === DifferenceType.Equals) {
+//         console.log(" ".repeat(d._src?._level as number) + "Equals  hash: " + d._src?._hash + " text: " + d._src?.text);
+//     }
+//     if (d._type === DifferenceType.Error) {
+//         console.log("error");
+//     }
 // });

@@ -61,7 +61,14 @@ var LNode = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(LNode.prototype, "text", {
+    Object.defineProperty(LNode.prototype, "level", {
+        get: function () {
+            return this._level;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(LNode.prototype, "content", {
         get: function () {
             var str = "";
             if (this._node.type === "tag") {
@@ -74,9 +81,9 @@ var LNode = /** @class */ (function () {
             }
             if (this._node.type === "text") {
                 var text = this._node;
-                str += "text" + text.data;
+                str += "textelement" + text.data;
             }
-            return str;
+            return str.replace(/\\n/g, '');
         },
         enumerable: false,
         configurable: true

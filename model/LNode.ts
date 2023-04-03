@@ -80,7 +80,11 @@ class LNode {
         return this._hash;
     }
 
-    get text() {
+    get level() {
+        return this._level;
+    }
+
+    get content() {
         let str : string = "";
         if (this._node.type === "tag") {
             let tag: cheerio.TagElement = this._node as cheerio.TagElement;
@@ -97,9 +101,10 @@ class LNode {
         if (this._node.type === "text") {
             let text: cheerio.TextElement = this._node as cheerio.TextElement;
 
-            str += "text" + text.data;
+            str += "textelement" + text.data;
         }
-        return str;
+
+        return str.replace(/\\n/g, '');
     }
 
     get wrappedNode() : cheerio.Element {
