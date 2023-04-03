@@ -7,27 +7,7 @@ var LNode = /** @class */ (function () {
     function LNode(level, node) {
         this._node = node;
         this._level = level;
-        var str = "";
-        if (this._node.type === "tag") {
-            var tag_1 = node;
-            var keys = Object.keys(tag_1.attribs);
-            str += tag_1.name;
-            keys.forEach(function (k) {
-                str += k + "=" + tag_1.attribs[k] + "||||";
-            });
-            str += tag_1.data;
-        }
-        if (this._node.type === "comment") {
-            var comment = node;
-            str += "comment" + comment.data;
-        }
-        if (this._node.type === "text") {
-            var text = node;
-            str += "text" + text.data;
-        }
-        this._hash = md5(str);
-        //console.log(str);
-        //console.log(this._hash);
+        this._hash = "";
     }
     Object.defineProperty(LNode.prototype, "node", {
         get: function () {
@@ -101,6 +81,32 @@ var LNode = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    LNode.prototype.computeHash = function (ignoreClassAttribute) {
+        var str = "";
+        if (this._node.type === "tag") {
+            var tag_1 = this._node;
+            var keys = Object.keys(tag_1.attribs);
+            str += tag_1.name;
+            keys.forEach(function (k) {
+                if (!(ignoreClassAttribute && k === "class")) {
+                    str += k + "=" + tag_1.attribs[k] + "||||";
+                }
+            });
+            str += tag_1.data;
+        }
+        if (this._node.type === "comment") {
+            var comment = this._node;
+            str += "comment" + comment.data;
+        }
+        if (this._node.type === "text") {
+            var text = this._node;
+            str += "text" + text.data;
+        }
+        this._hash = md5(str);
+        //console.log(str);
+        //console.log(this._hash);
+        return this._hash;
+    };
     LNode.prototype.isEqualTo = function (otherNode) {
         return otherNode._hash == this._hash;
     };
