@@ -13,5 +13,8 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
     "md5": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11"
   }
 }

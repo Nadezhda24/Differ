@@ -151,13 +151,13 @@ let result = buildResultListFromDifferences(src, dst, diffs);
 
 diffs.forEach((d : Difference) => {
     if (d._type === DifferenceType.Added) {
-        console.log(" ".repeat(d._dst?._level as number) + "Added   " + d._dst?.text);
+        console.log(" ".repeat(d._dst?._level as number) + "Added   hash: " + d._dst?._hash + " text: " + d._dst?.text);
     }
     if (d._type === DifferenceType.Deleted) {
-        console.log(" ".repeat(d._dst?._level as number) + "Deleted " + d._src?.text);
+        console.log(" ".repeat(d._src?._level as number) + "Deleted hash: " + d._src?._hash + " text: " + d._src?.text);
     }
     if (d._type === DifferenceType.Equals) {
-        console.log(" ".repeat(d._dst?._level as number) + "Equals  " + d._src?.text);
+        console.log(" ".repeat(d._src?._level as number) + "Equals  hash: " + d._src?._hash + " text: " + d._src?.text);
     }
     if (d._type === DifferenceType.Error) {
         console.log("error");
