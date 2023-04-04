@@ -107,7 +107,7 @@ class LNode {
     }
 
     isEqualTo(otherNode : LNode) : boolean {
-        return otherNode._hash == this._hash;
+        return otherNode._hash === this._hash;
     }
 
     clearChilds() {

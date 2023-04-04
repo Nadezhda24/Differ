@@ -63,6 +63,11 @@ var HTMLDiffer = /** @class */ (function () {
                 // track deleted items
                 diffs.push(new Difference_1.Difference(src[i], null));
             }
+            if (i == existancePositions.length - 1) {
+                for (var j = lastNotDeletedItemPos + 1; j < dst.length; ++j) {
+                    diffs.push(new Difference_1.Difference(null, dst[j]));
+                }
+            }
         }
         this._differences = diffs;
         return diffs;
@@ -72,7 +77,7 @@ var HTMLDiffer = /** @class */ (function () {
         fs.writeFileSync(path, "\n");
         (_a = this._differences) === null || _a === void 0 ? void 0 : _a.forEach(function (d) {
             var _a;
-            fs.appendFileSync(path, " ".repeat((_a = d.node) === null || _a === void 0 ? void 0 : _a.level) + d.content);
+            fs.appendFileSync(path, " ".repeat((_a = d.node) === null || _a === void 0 ? void 0 : _a.level) + d.content + "\n");
         });
     };
     return HTMLDiffer;

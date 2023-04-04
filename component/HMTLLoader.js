@@ -31,13 +31,17 @@ var HTMLLoader = /** @class */ (function () {
             }
         };
         (_a = this._root) === null || _a === void 0 ? void 0 : _a.root().children().toArray().forEach(function (el) { return htmlTreeToPlainListRec(1, el); });
+        this._list = list;
         return list;
     };
     HTMLLoader.prototype.dumpListToFile = function (path) {
-        var _a;
+        var _a, _b;
         fs.writeFileSync(path, "\n");
         (_a = this._list) === null || _a === void 0 ? void 0 : _a.forEach(function (r) {
-            fs.appendFileSync(path, " ".repeat(r.level) + r.content);
+            fs.appendFileSync(path, " ".repeat(r.level) + r.content + '\n');
+        });
+        (_b = this._list) === null || _b === void 0 ? void 0 : _b.forEach(function (r) {
+            fs.appendFileSync(path, r.hash + "\n");
         });
     };
     return HTMLLoader;

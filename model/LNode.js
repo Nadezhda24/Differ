@@ -108,7 +108,7 @@ var LNode = /** @class */ (function () {
         return this._hash;
     };
     LNode.prototype.isEqualTo = function (otherNode) {
-        return otherNode._hash == this._hash;
+        return otherNode._hash === this._hash;
     };
     LNode.prototype.clearChilds = function () {
         if (this._node.type === "tag") {

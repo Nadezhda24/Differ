@@ -78,6 +78,14 @@ class HTMLDiffer {
                 // track deleted items
                 diffs.push(new Difference(src[i], null));
             }
+
+            if (i == existancePositions.length - 1)
+            {
+                for (let j : number = lastNotDeletedItemPos + 1; j < dst.length; ++j)
+                {
+                    diffs.push(new Difference(null, dst[j]));
+                }
+            }
         }
 
         this._differences = diffs;
@@ -89,7 +97,7 @@ class HTMLDiffer {
         fs.writeFileSync(path, "\n");
     
         this._differences?.forEach((d) => {
-            fs.appendFileSync(path, " ".repeat(d.node?.level as number) + d.content)
+            fs.appendFileSync(path, " ".repeat(d.node?.level as number) + d.content + "\n")
         });
     }
 }

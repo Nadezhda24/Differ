@@ -37,6 +37,8 @@ class HTMLLoader {
         
         this._root?.root().children().toArray().forEach(el => htmlTreeToPlainListRec(1, el));
 
+        this._list = list;
+
         return list;
     }
 
@@ -44,7 +46,11 @@ class HTMLLoader {
         fs.writeFileSync(path, "\n");
     
         this._list?.forEach((r) => {
-            fs.appendFileSync(path, " ".repeat(r.level) + r.content)
+            fs.appendFileSync(path, " ".repeat(r.level) + r.content + '\n')
+        })
+
+        this._list?.forEach((r) => {
+            fs.appendFileSync(path, r.hash + "\n");
         })
     }
 }
