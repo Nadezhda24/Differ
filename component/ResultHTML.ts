@@ -1,45 +1,57 @@
+import * as ch from "cheerio";
 import { Difference, DifferenceType } from "../model/Difference";
 import { LNode } from "../model/LNode";
 
 class ResultHTML {
     docTemplate(content: string) : string {
-        return `<!DOCTYPE html>
-                <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-                        <title>HTML Difference</title>
-                        <style>
-                            .delete { background-color:#EA8888FF; } 
-                            .add { background-color:#9FE89FFF; }
-                            .equal { background-color:#FFFFFF; }
-                        </style>
-                    </head>
-                    <body>
-                        <pre>${content}</pre>
-                    </body>
-                </html>`
+        return `<!DOCTYPE html>${content}`
     }
 
-    itemTemplate(content: string, type: DifferenceType) : string {
-        let styleMap = {};
+    makeRootNode(): LNode {
+        let rootNode = new LNode(0, ch.load("").root().children().toArray()[0]);
+        rootNode.clearChilds();
 
-        styleMap[DifferenceType.Added] = "add";
-        styleMap[DifferenceType.Deleted] = "delete";
-        styleMap[DifferenceType.Equals] = "equal";
+        return rootNode;
+    }
 
-        return `<span class=${styleMap[type]}>${content}</span></br>`;
+    wrapNode(node: LNode, type: DifferenceType) : LNode {
+        if (type == DifferenceType.Equals)
+            return node;
+
+        let colorMap = {};
+        colorMap[DifferenceType.Added] = "#9FE89FFF";
+        colorMap[DifferenceType.Deleted] = "#EA8888FF";
+
+        let wrapDiv = ch.load(`<div style="background-color:${colorMap[type]}"></div>`).root().children().toArray()[0] as cheerio.TagElement;
+        wrapDiv = wrapDiv.children[1] as cheerio.TagElement;
+        wrapDiv = wrapDiv.children[0] as cheerio.TagElement;
+
+        let wrapNode = new LNode(node.level, wrapDiv);
+        wrapNode.appendChild(node);
+
+        return wrapNode;
     }
 
     buildHtml(differences: Difference[]) : string {
-        let content: string = ""
+        let content: string = "";
+
+        let root = this.makeRootNode();
 
         differences.forEach(element => {
-            content += this.itemTemplate(element.node?.escapedHtml as string, element.type);
+            element.node.clearChilds();
+            let lastNode = root;
+
+            for (let i = 1; i < element.node.level; i++) {
+                if (lastNode.children.at(-1))
+                    lastNode = lastNode.children.at(-1);
+                else
+                    break;
+            }
+
+            lastNode.appendChild(this.wrapNode(element.node, element.type));
         });
 
-        return this.docTemplate(content);
+        return this.docTemplate(root.html);
     }
 }
 

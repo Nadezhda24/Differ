@@ -1,11 +1,12 @@
 import * as fs from "fs";
 
 import { ResultHTML } from './component/ResultHTML';
-import { HTMLLoader } from './component/HMTLLoader';
+import { HTMLLoader } from './component/HTMLLoader';
 import { HTMLDiffer } from './component/HTMLDiffer';
 
 enum ArgsKeys {
-    IgnoreClassAtrribute,
+    IgnoreAttributes,
+    IgnoreClassAtrribute
 }
 
 function main(path1 : string, path2 : string, resultFileName : string, args : object) {
@@ -14,12 +15,12 @@ function main(path1 : string, path2 : string, resultFileName : string, args : ob
     console.log("loading html1 ...");
     loader.loadHtml(path1);
     let list1 = loader.getPlainTree();
-    list1.forEach(item => {item.computeHash(args[ArgsKeys.IgnoreClassAtrribute])})
+    list1.forEach(item => {item.computeHash(args[ArgsKeys.IgnoreAttributes], args[ArgsKeys.IgnoreClassAtrribute])})
 
     console.log("loading html2 ...");
     loader.loadHtml(path2);
     let list2 = loader.getPlainTree();
-    list2.forEach(item => {item.computeHash(args[ArgsKeys.IgnoreClassAtrribute])})
+    list2.forEach(item => {item.computeHash(args[ArgsKeys.IgnoreAttributes], args[ArgsKeys.IgnoreClassAtrribute])})
 
     console.log("we are looking for differences ...");
     let differ = new HTMLDiffer();
@@ -37,8 +38,10 @@ function main(path1 : string, path2 : string, resultFileName : string, args : ob
 }
 
 function processInput() : string[] {
-    let ignoreCaseArg = "--ignoreClassAttribute";
-    let usage : string = `usage: <path/to/src/html> <path/to/dst/html> <resultFileName> [${ignoreCaseArg}]`;
+    let ignoreAttributesArg = "--ignoreAttributes"
+    let ignoreClassAttributeArg = "--ignoreClassAttribute";
+
+    let usage : string = `usage: <source file> <destination file> <result file> [${ignoreAttributesArg}, ${ignoreClassAttributeArg}]`;
     let args : string[] = []
 
     if (process.argv.length < 5) {
@@ -47,38 +50,44 @@ function processInput() : string[] {
     }
     else 
     {
-        let path1 = process.argv[2];
-        let path2 = process.argv[3];
-        let filename = process.argv[4];
-        let ignoreCaseArgValue : boolean = false;
+        let srcPath = process.argv[2];
+        let dstPath = process.argv[3];
+        let resultPath = process.argv[4];
+        
+        let ignoreAttributesArgValue : boolean = false;
+        let ignoreClassAttributeArgValue : boolean = false;
 
-        if (process.argv.length >= 6 && process.argv[5] === ignoreCaseArg) 
+        if (process.argv.length >= 6) 
         {
-            ignoreCaseArgValue = true;
+            for (let i = 5; i < process.argv.length; i++) {
+                if (process.argv[i] === ignoreAttributesArg) ignoreAttributesArgValue = true;
+                else if (process.argv[i] === ignoreClassAttributeArg) ignoreClassAttributeArgValue = true;
+            }
         }
 
-        if (!fs.existsSync(path1)) 
+        if (!fs.existsSync(srcPath)) 
         {
-            console.log(`filepath ${path1} does not exists`);
+            console.log(`filepath ${srcPath} does not exists`);
             args = ["-1"]
         } 
         else 
         {
-            args.push(path1);
+            args.push(srcPath);
         }
 
-        if (!fs.existsSync(path2)) 
+        if (!fs.existsSync(dstPath)) 
         {
-            console.log(`filepath ${path2} does not exists`);
+            console.log(`filepath ${dstPath} does not exists`);
             args = ["-1"]
         }
         else
         {
-            args.push(path2);
+            args.push(dstPath);
         }
 
-        args.push(filename);
-        args.push(ignoreCaseArgValue ? "1" : "0");
+        args.push(resultPath);
+        args.push(ignoreAttributesArgValue ? "1" : "0");
+        args.push(ignoreClassAttributeArgValue ? "1" : "0");
     }
 
     return args;
@@ -89,8 +98,8 @@ let args = processInput();
 if (args[0] !== "-1") {
     let additionalArgs = {}
 
-    additionalArgs[ArgsKeys.IgnoreClassAtrribute] = args[3] === "1";
+    additionalArgs[ArgsKeys.IgnoreAttributes] = args[3] === "1";
+    additionalArgs[ArgsKeys.IgnoreClassAtrribute] = args[4] === "1";
 
-    //main("testPages/1-src.html", "testPages/1-dst.html", "result", additionalArgs);
     main(args[0], args[1], args[2], additionalArgs);
 }

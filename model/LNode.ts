@@ -5,11 +5,13 @@ class LNode {
     _node : cheerio.Element
     _hash : string
     _level : number
+    _children : LNode[]
 
     constructor(level: number, node : cheerio.Element) {
         this._node = node
         this._level = level
         this._hash = ""
+        this._children = [];
     }
 
     get node() {
@@ -26,6 +28,10 @@ class LNode {
 
     get level() {
         return this._level;
+    }
+
+    get children() {
+        return this._children;
     }
 
     get content() {
@@ -54,24 +60,11 @@ class LNode {
     get html() : string {
         let doc = ch.load("");
 
-        this.clearChilds();
-
         doc.root().children().replaceWith(this._node);
         return doc.html();
     }
 
-    get escapedHtml() : string {
-        let lookup = {
-            '&': '&amp;',
-            '"': '&quot;',
-            '\'': '&apos;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-        return this.html.replace(/[&"'<>]/g, c => lookup[c]);
-    }
-
-    computeHash(ignoreClassAttribute : boolean) : string {
+    computeHash(ignoreAttributes : boolean, ignoreClassAttribute : boolean) : string {
         let str: string = ""
 
         if (this._node.type === "tag") {
@@ -79,11 +72,15 @@ class LNode {
             let keys: string[] = Object.keys(tag.attribs);
 
             str += tag.name;
-            keys.forEach((k) => {
-                if (!(ignoreClassAttribute && k === "class")) {
-                    str += k + "=" + tag.attribs[k] + "||||";
-                }
-            });
+
+            if (!ignoreAttributes) {
+                keys.forEach((k) => {
+                    if (!(ignoreClassAttribute && k === "class")) {
+                        str += k + "=" + tag.attribs[k] + "||||";
+                    }
+                });
+            }
+
             str += tag.data;
         }
     
@@ -100,8 +97,6 @@ class LNode {
         }
 
         this._hash = md5(str) as string;
-        //console.log(str);
-        //console.log(this._hash);
 
         return this._hash;
     }
@@ -113,6 +108,18 @@ class LNode {
     clearChilds() {
         if (this._node.type === "tag") {
             (this._node as cheerio.TagElement).childNodes = [];
+        }
+    }
+
+    appendChild(childNode : LNode) {
+        if (childNode._level <= this._level) {
+            childNode._level = this._level + 1;
+        }
+
+        this._children.push(childNode);
+
+        if (this._node.type === "tag") {
+            (this._node as cheerio.TagElement).childNodes.push(childNode.node);
         }
     }
 }

@@ -8,6 +8,7 @@ var LNode = /** @class */ (function () {
         this._node = node;
         this._level = level;
         this._hash = "";
+        this._children = [];
     }
     Object.defineProperty(LNode.prototype, "node", {
         get: function () {
@@ -37,6 +38,13 @@ var LNode = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(LNode.prototype, "children", {
+        get: function () {
+            return this._children;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(LNode.prototype, "content", {
         get: function () {
             var str = "";
@@ -60,38 +68,25 @@ var LNode = /** @class */ (function () {
     Object.defineProperty(LNode.prototype, "html", {
         get: function () {
             var doc = ch.load("");
-            this.clearChilds();
             doc.root().children().replaceWith(this._node);
             return doc.html();
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(LNode.prototype, "escapedHtml", {
-        get: function () {
-            var lookup = {
-                '&': '&amp;',
-                '"': '&quot;',
-                '\'': '&apos;',
-                '<': '&lt;',
-                '>': '&gt;'
-            };
-            return this.html.replace(/[&"'<>]/g, function (c) { return lookup[c]; });
-        },
-        enumerable: false,
-        configurable: true
-    });
-    LNode.prototype.computeHash = function (ignoreClassAttribute) {
+    LNode.prototype.computeHash = function (ignoreAttributes, ignoreClassAttribute) {
         var str = "";
         if (this._node.type === "tag") {
             var tag_1 = this._node;
             var keys = Object.keys(tag_1.attribs);
             str += tag_1.name;
-            keys.forEach(function (k) {
-                if (!(ignoreClassAttribute && k === "class")) {
-                    str += k + "=" + tag_1.attribs[k] + "||||";
-                }
-            });
+            if (!ignoreAttributes) {
+                keys.forEach(function (k) {
+                    if (!(ignoreClassAttribute && k === "class")) {
+                        str += k + "=" + tag_1.attribs[k] + "||||";
+                    }
+                });
+            }
             str += tag_1.data;
         }
         if (this._node.type === "comment") {
@@ -103,8 +98,6 @@ var LNode = /** @class */ (function () {
             str += "text" + text.data;
         }
         this._hash = md5(str);
-        //console.log(str);
-        //console.log(this._hash);
         return this._hash;
     };
     LNode.prototype.isEqualTo = function (otherNode) {
@@ -113,6 +106,15 @@ var LNode = /** @class */ (function () {
     LNode.prototype.clearChilds = function () {
         if (this._node.type === "tag") {
             this._node.childNodes = [];
+        }
+    };
+    LNode.prototype.appendChild = function (childNode) {
+        if (childNode._level <= this._level) {
+            childNode._level = this._level + 1;
+        }
+        this._children.push(childNode);
+        if (this._node.type === "tag") {
+            this._node.childNodes.push(childNode.node);
         }
     };
     return LNode;
