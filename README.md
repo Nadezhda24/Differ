@@ -127,11 +127,11 @@ for (int i = 0; i < s1.Length; ++i)
 ------------
 1. Запуск с предварительной компиляцией
 ~~~
-tsc app.ts | node app.js <path/to/src/html> <path/to/dst/html> <resultFileName> [--ignoreClassAttribute]
+tsc app.ts | node app.js <path/to/src/html> <path/to/dst/html> <resultFileName> [--ignoreAttributes] [--ignoreClassAttribute]
 ~~~
 2. Запуск без компиляции (компиляция уже была выполнена)
 ~~~
-node app.js <path/to/src/html> <path/to/dst/html> <resultFileName> [--ignoreClassAttribute]
+node app.js <path/to/src/html> <path/to/dst/html> <resultFileName> [--ignoreAttributes] [--ignoreClassAttribute]
 ~~~
 
 Описание аргументов командной командной строки:
@@ -142,5 +142,42 @@ node app.js <path/to/src/html> <path/to/dst/html> <resultFileName> [--ignoreClas
 
 Пример запуска:
 ~~~
-node  app.js ./testPages/1-src.html ./testPages/1-dst.html result --ignoreClassAttribute
+node  app.js ./testPages/1-src.html ./testPages/1-dst.html result --ignoreAttributes --ignoreClassAttribute
 ~~~
+
+Примеры работы
+------------
+1. 
+    ~~~
+    node  app.js srcpage.html dstpage.html resultpage --ignoreAttributes --ignoreClassAttribute
+    ~~~
+
+    ![](./resultExamples/%20(1).png)
+
+2. 
+    ~~~
+    node  app.js srcpage.html dstpage.html resultpage --ignoreAttributes --ignoreClassAttribute
+    ~~~
+
+    ![](./resultExamples/%20(2).png)
+
+3. 
+    ~~~
+    node  app.js srcpage.html dstpage.html resultpage --ignoreAttributes --ignoreClassAttribute
+    ~~~
+
+    ![](./resultExamples/%20(3).png)
+
+4. 
+    ~~~
+    node  app.js srcpage.html dstpage.html resultpage --ignoreAttributes --ignoreClassAttribute
+    ~~~
+
+    ![](./resultExamples/%20(4).png)
+
+5. 
+    ~~~
+    node  app.js srcpage.html dstpage.html resultpage --ignoreAttributes --ignoreClassAttribute
+    ~~~
+
+    ![](./resultExamples/%20(5).png)
